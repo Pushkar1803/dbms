@@ -1,0 +1,82 @@
+Q2
+*  create table Account(accno double primary key, branch varchar(20),balance double);
+
+   create table branch(branchname varchar(20) primary key, city varchar(20));
+
+   create table customer(cname varchar(20) primary key , street varchar(20), custcity         varchar(20));
+
+   create table depositor(cname VARCHAR(20),accno DOUBLE,FOREIGN KEY (cname) REFERENCES  customer(cname));
+   
+   create table loan (loanno DOUBLE PRIMARY KEY,branchname VARCHAR(20),amount DOUBLE ,FOREIGN KEY (branchname) REFERENCES branch(branchname));
+
+   create table borrower(cname varchar(30) , loanno double);
+
+*    insert into Account values(12345, 'akurdi', 30000),(12346, 'sarasbhag',40000),(12347,'khuthrud',12000);
+
+ insert into branch values('akurdi','solapur'),('sarasbhag','pune'),('khuthrud','nagar'); 
+
+insert into customer values('shreyash','xyz','nagar'),('kunal','pqr','solapur'),('dama','abc','pune');
+
+insert into depositor values('shreyash',12345),('kunal',12346),('dama',12347);
+
+insert into loan values(33,'akurdi',12000),(28,'sarasbhag',1500),(62,'khuthrud',1400);
+
+insert into borrower values('shreyash',33),('kunal',28),('dama',62);
+
+*  Qi. i. Create View on borrower table by selecting any two columns and perform insert update delete
+operations
+
+   CREATE VIEW borrower_view AS SELECT cname, loanno FROM borrower;
+
+   INSERT INTO borrower_view VALUES ('new_customer', 40);
+
+   UPDATE borrower_view SET loanno = 45 WHERE cname = 'shreyash';
+
+   DELETE FROM borrower_view WHERE cname = 'new_customer';
+
+Qii. Create view on borrower and depositor table by selecting any one column from each table
+perform insert update delete operations
+
+CREATE VIEW borrower_depositor_view AS SELECT b.cname AS borrower_name, d.cname AS depositor_name FROM borrower b JOIN depositor d ON b.cname = d.cname;
+
+INSERT INTO borrower (cname, loanno) VALUES ('new_customer', 40);
+
+INSERT INTO customer (cname, street, custcity) VALUES ('new_customer', 'street_value', 'city_value');
+
+INSERT INTO depositor (cname, accno) VALUES ('new_customer', 12348);
+
+UPDATE borrower SET loanno = 50 WHERE cname = 'new_customer';
+
+UPDATE depositor SET accno = 12349 WHERE cname = 'new_customer';
+
+DELETE FROM borrower WHERE cname = 'new_customer';
+
+DELETE FROM depositor WHERE cname = 'new_customer';
+
+
+Qiii. List the customer who do not have bank branches in akurdi.
+
+SELECT c.* FROM customer c LEFT JOIN depositor d ON c.cname = d.cname LEFT JOIN Account a ON d.accno = a.accno LEFT JOIN branch b ON a.branch = b.branchname WHERE b.branchname IS NULL OR b.city != 'akurdi';
+
+Qiv. Display the customers those who have loan accounts.
+
+SELECT c.* FROM customer c JOIN depositor d ON c.cname = d.cname JOIN loan l ON d.accno = l.loanno;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
