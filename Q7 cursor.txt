@@ -1,0 +1,63 @@
+Write a PL/SQL block of code using parameterized Cursor, that will merge the data available in the newly
+created table N_RollCall with the data available in the table O_RollCall. If the data in the first table already
+exist in the second table then that data should be skipped.
+create table O_RollCall(Rollno number,Name varchar2(30));
+create table N_RollCall(Rollno number,Name varchar2(30));
+
+
+
+CREATE TABLE O_RollCall (
+         Rollno INT ,
+         Name VARCHAR(30)
+     );
+CREATE TABLE N_RollCall (
+         Rollno INT,
+         Name VARCHAR(30)
+     );
+INSERT INTO N_RollCall (Rollno, Name)
+VALUES (1, 'John');
+
+INSERT INTO N_RollCall (Rollno, Name)
+VALUES (2, 'Alice');
+
+INSERT INTO N_RollCall (Rollno, Name)
+VALUES (3, 'Bob');
+
+INSERT INTO O_RollCall (Rollno, Name)
+VALUES (2, 'Alice');
+
+INSERT INTO O_RollCall (Rollno, Name)
+VALUES (4, 'Eve');
+
+DELIMITER //
+
+CREATE PROCEDURE MergeRollCall()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE v_Rollno INT;
+    DECLARE v_Name VARCHAR(30);
+
+    DECLARE cur CURSOR FOR SELECT Rollno, Name FROM N_RollCall;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN cur;
+
+    read_loop: LOOP
+        FETCH cur INTO v_Rollno, v_Name;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF NOT EXISTS (SELECT * FROM O_RollCall WHERE Rollno = v_Rollno AND Name = v_Name) THEN
+            INSERT INTO O_RollCall (Rollno, Name) VALUES (v_Rollno, v_Name);
+        END IF;
+    END LOOP;
+
+    CLOSE cur;
+END //
+
+DELIMITER ;
+CALL MergeRollCall();
+
+
+
