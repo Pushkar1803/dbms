@@ -1,0 +1,30 @@
+Q12
+Implement Map-Reduce Operation consider your own collection
+
+db.orders.insert({cust_id:"A123",amount:500,status:"A"})
+db.orders. insert({cust_id:"A124",amount:250, status:"A"})
+db.orders.insert({cust_id:"B212", amount:200, status:"A" })
+db.orders.insert({cust_id:"A125", amount:300, status:"D" })
+db.orders.find().pretty()
+
+var map= function(){emit(this.cust_id,this.amount)}
+var reduce = function(key, values) {return Array.sum(values);}
+var count= db.orders.mapReduce(map,reduce,{query: {status:"A"},out:"Total_amt"})
+db[count.result].find()
+var map= function(){ emit(this.status,this.amount)}
+var reduce= function(key,values){return Array.sum(values)}
+var count= db.orders.mapReduce(map,reduce, {out: "Total_amt"})
+
+db[count.result].find()
+db.Book.insert({N:"java", pages: 100})
+db.Book.insert({N:"Json", pages:200})
+db.Book.insert({N:"XMI", pages:300 })
+db.Book.insert({N:"Web", pages:40})
+db.Book.insert({N:"Axis", pages: 150})
+db.Book.find()
+
+var map = function() {var Cat;if (this.pages >= 250) {Cat = "Bigbook";} else {Cat = "Smallbook";}emit(Cat, { name:this.name });};
+var reduce= function(key, values){var sum=0;values.forEach(function(doc){sum+=1});return sum}
+var count=db.Book.mapReduce(map,reduce,{out:"sum"})
+db[count.result].find()
+
