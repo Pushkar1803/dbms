@@ -1,3 +1,11 @@
+Write a Stored Procedure namely proc_Grade for the categorization of student.
+Schema :
+1) create table marks(rollno number(10), name varchar2(30), sub1 number,sub2 number,sub3
+number,sub4 number,sub5 number);
+2) create table stud_marks(rollno number(10),name varchar2(30),total_marks number(10));
+3) create table Result(rollno number(10), name varchar2(30), class varchar2(30));
+
+
 CREATE TABLE marks (
     rollno INT(10),
     name VARCHAR(30),
