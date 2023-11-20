@@ -1,0 +1,37 @@
+Q13 Create Collection Employee with following documents /attributes (emp_id, emp_name, emp_salary,
+emp_designation, emp_Bdate, emp_mobileno ,emp_dept)
+Operations.
+i. Insert at least 10 documents
+ii. Display total salary of department wise
+iii. Update the emp designation from “Junior Developer” to “Senior Developer”
+iv. Delete the emp with age greater than 60
+v. Display the emp names and salary department wise.
+Qi. Insert at least 10 documents.
+
+db.Employee.insertMany([ { "emp_id": 1, "emp_name": "John Smith", "emp_salary": 60000, "emp_designation": "Junior Developer", "emp_Bdate": ISODate("1990-05-15"),"emp_mobileno": "1234567890", "emp_dept": "IT" }, 
+{"emp_id": 2, "emp_name": "Jane Doe", "emp_salary": 75000, "emp_designation": "Senior Developer", "emp_Bdate": ISODate("1985-09-20"), "emp_mobileno": "9876543210","emp_dept": "HR" }, ]); 
+
+Qii. Display total salary of department wise.
+
+     db.Employee.aggregate([ { $group: { _id: "$emp_dept", totalSalary: { $sum:    "$emp_salary" } } }, { $project: { _id: 0, Department:"$_id", 
+ TotalSalary: "$totalSalary"}}]); 
+
+Qiii. Update the emp designation from “Junior Developer” to “Senior Developer” .
+
+  db.Employee.updateMany( { "emp_designation": "Junior Developer" }, { $set:    { "emp_designation": "Senior Developer" } } ); 
+
+Qiv. Delete the emp with age greater than 60.
+
+   db.Employee.deleteMany( { "emp_Bdate": { $lt: ISODate("1963-01-01") } } ); 
+
+Qv. Display the emp names and salary department wise.
+
+db.Employee.aggregate([ { $group: {_id: { Department: "$emp_dept", Name: "$emp_name" }, Salary: { $first: "$emp_salary" }}}, { $project: { _id: 0, Department: "$_id.Department", Name: "$_id.Name", Salary: "$Salary"}}]); 
+
+
+
+
+
+
+
+
