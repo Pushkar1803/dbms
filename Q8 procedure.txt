@@ -1,0 +1,82 @@
+CREATE TABLE marks (
+    rollno INT(10),
+    name VARCHAR(30),
+    sub1 INT,
+    sub2 INT,
+    sub3 INT,
+    sub4 INT,
+    sub5 INT
+);
+
+CREATE TABLE stud_marks (
+    rollno INT(10),
+    name VARCHAR(30),
+    total_marks INT(10)
+);
+
+CREATE TABLE Result (
+    rollno INT(10),
+    name VARCHAR(30),
+    class VARCHAR(30)
+);
+
+INSERT INTO marks (rollno, name, sub1, sub2, sub3, sub4, sub5)
+VALUES
+    (101, 'Student1', 85, 90, 80, 78, 92),
+    (102, 'Student2', 70, 88, 75, 82, 90),
+    (103, 'Student3', 92, 85, 88, 90, 85),
+    (104, 'Student4', 78, 80, 79, 85, 88),
+    (105, 'Student5', 95, 92, 90, 88, 85);
+    
+INSERT INTO stud_marks (rollno, name, total_marks)
+VALUES
+    (101, 'Student1', 425),
+    (102, 'Student2', 405),
+    (103, 'Student3', 440),
+    (104, 'Student4', 410),
+    (105, 'Student5', 450);
+    
+DELIMITER //
+ 
+ CREATE PROCEDURE proc_Grade()
+     BEGIN
+         DECLARE v_rollno INT;
+         DECLARE v_name VARCHAR(30);
+         DECLARE v_total_marks INT;
+         DECLARE v_class VARCHAR(30);
+     
+         DECLARE done INT DEFAULT FALSE;
+     
+         DECLARE cur CURSOR FOR SELECT rollno, name, total_marks FROM stud_marks;
+         DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+     
+         OPEN cur;
+     
+         read_loop: LOOP
+             FETCH cur INTO v_rollno, v_name, v_total_marks;
+             IF done THEN
+                 LEAVE read_loop;
+             END IF;
+     
+             IF v_total_marks <= 1500 AND v_total_marks >= 990 THEN
+                 SET v_class = 'Distinction';
+             ELSEIF v_total_marks BETWEEN 989 AND 900 THEN
+                 SET v_class = 'First Class';
+             ELSEIF v_total_marks BETWEEN 899 AND 825 THEN
+                 SET v_class = 'Higher Second Class';
+             ELSEIF v_total_marks BETWEEN 824 AND 600 THEN
+                 SET v_class = 'Pass Class';
+             ELSE
+                 SET v_class = 'Fail';
+             END IF;
+     
+             INSERT INTO Result (rollno, name, class)
+             VALUES (v_rollno, v_name, v_class);
+         END LOOP;
+     
+         CLOSE cur;
+     END //
+
+DELIMITER ;
+CALL proc_Grade();
+
