@@ -1,0 +1,54 @@
+Q1
+ *  CREATE TABLE Customer(cust_no INT PRIMARY KEY, fname VARCHAR(50), lname VARCHAR(50));
+
+ CREATE TABLE Cust_Acc_FD_Details (custno INT, acc_fd_no INT PRIMARY KEY, FOREIGN KEY (custno) REFERENCES Customer(cust_no));
+
+ CREATE TABLE fd_details ( acc_fd_no INT PRIMARY KEY, amt DECIMAL(10,2));
+
+ CREATE TABLE address_details (code_no INT PRIMARY KEY, add1 VARCHAR(100), add2 VARCHAR(100), state VARCHAR(50), city VARCHAR(50), pincode VARCHAR(10));
+
+ CREATE TABLE Employee (emp_no INT PRIMARY KEY, f_name VARCHAR(50), l_name VARCHAR(50), m_name VARCHAR(50), dept VARCHAR(50), code_no INT,
+    FOREIGN KEY (code_no) REFERENCES address_details(code_no));
+
+ CREATE TABLE Contact_details (code_no INT, cntc_type VARCHAR(50), cntc_data VARCHAR(100), PRIMARY KEY (code_no, cntc_type),
+    FOREIGN KEY (code_no) REFERENCES address_details(code_no));
+
+ *  INSERT INTO Customer (cust_no, fname, lname) VALUES (1, 'kunal', 'koli'), (2, 'pranav', 'surve'), (3, 'xyz', 'pqr');
+
+ INSERT INTO Cust_Acc_FD_Details (custno, acc_fd_no) VALUES (1, 101), (2, 102), (3, 103);
+
+ INSERT INTO fd_details (acc_fd_no, amt) VALUES (101, 5000.00), (102, 8000.00), (103, 6000.00);
+
+ INSERT INTO address_details (code_no, add1, add2, state, city, pincode) VALUES (1, 'kharadi', 'SN', 'Maha', 'pune', '411014'),
+       (2, 'shivaji park', 'SN', 'Maha', 'mumbai', '10001'),
+       (3, 'pandharpur', 'gandhi nagar', 'Maha', 'solapur', '94105');
+
+ INSERT INTO Employee (emp_no, f_name, l_name, m_name, dept, code_no) VALUES (101, 'kunal', 'koli', 's', 'HR', 1),
+       (102, 'pranav', 'surve', 'r', 'IT', 2),
+       (103, 'pushkar', 'more', 'd', 'Finance', 3);
+
+ INSERT INTO Contact_details (code_no, cntc_type, cntc_data) VALUES (1, 'Email', 'kunal@email.com'),
+       (2, 'Phone', '555-1234'),
+       (3, 'Email', 'more@email.com');
+
+Qi. Retrieve the address of customer Fname as 'xyz' and Lname as 'pqr'
+
+ *  SELECT a.* FROM address_details a JOIN Customer c ON a.code_no = c.cust_no
+        WHERE c.fname = 'xyz' AND c.lname = 'pqr';
+
+Qii. List the customer holding fixed deposit of amount more than 5000
+ SELECT c.* FROM Customer c
+        JOIN Cust_Acc_FD_Details a ON c.cust_no = a.custno
+        JOIN fd_details fd ON a.acc_fd_no = fd.acc_fd_no
+        WHERE fd.amt > 5000;
+
+Qiii. List the employee details along with contact details using left outer join & right join.
+ 
+SELECT e.*, cd.cntc_type, cd.cntc_data    (for left join)
+        FROM Employee e
+        LEFT JOIN Contact_details cd ON e.code_no = cd.code_no;
+
+ SELECT e.*, cd.cntc_type, cd.cntc_data    (for right join)
+        FROM Contact_details cd
+        RIGHT JOIN Employee e ON e.code_no = cd.code_no;
+
