@@ -1,0 +1,72 @@
+Q5. Create following tables and solve following Queries. 
+Account(Acc_no, branch_name,balance) 
+branch(branch_name,branch_city,assets) 
+customer(cust_name,cust_street,cust_city) 
+Depositor(cust_name,acc_no) 
+Loan(loan_no,branch_name,amount)
+Borrower(cust_name,loan_no) Solve following query:
+i.	 Find all customers who have both account and loan at bank
+ii.	 Find all customer who have account but no loan at the bank.
+iii.	Find average account balance at Akurdi branch. 
+iv.	Find no. of depositors at each branch.
+v.	Find the branches where average account balance > 12000
+
+Coda :-
+
+create table Account(accno double primary key, branch varchar(20),balance double);
+
+create table branch(branchname varchar(20) primary key, city varchar(20));
+
+create table customer(cname varchar(20) primary key , street varchar(20), custcity varchar(20));
+
+create table depositor(cname VARCHAR(20),accno DOUBLE,FOREIGN KEY (cname) REFERENCES customer(cname));
+
+create table loan (loanno DOUBLE PRIMARY KEY,branchname VARCHAR(20),amount DOUBLE ,FOREIGN KEY (branchname) REFERENCES branch(branchname));
+
+create table borrower(cname varchar(30) , loanno double);
+
+insert into Account values(12345, 'akurdi', 30000),(12346, 'sarasbhag',40000),(12347,'khuthrud',12000);
+
+insert into branch values('akurdi','solapur'),('sarasbhag','pune'),('khuthrud','nagar');
+
+insert into customer values('shreyash','xyz','nagar'),('kunal','pqr','solapur'),('dama','abc','pune');
+
+insert into depositor values('shreyash',12345),('kunal',12346),('dama',12347);
+insert into loan values(33,'akurdi',12000),(28,'sarasbhag',1500),(62,'khuthrud',1400);
+
+insert into borrower values('shreyash',33),('kunal',28),('dama',62);
+
+select *from Account;
+
+select *from branch;
+
+select *from customer;
+
+select *from depositor;
+
+select *from loan;
+
+select *from borrower;
+
+
+
+Find all customers who have both account and loan at bank
+
+SELECT c.cname FROM customer c JOIN depositor d ON c.cname = d.cname JOIN Account a ON d.accno = a.accno JOIN loan l ON d.accno = l.loanno;
+
+Find all customer who have account but no loan at the bank.
+
+SELECT c.cname FROM customer c JOIN depositor d ON c.cname = d.cname LEFT JOIN loan l ON d.accno = l.loanno WHERE l.loanno IS NULL;
+
+Find average account balance at Akurdi branch. 
+
+SELECT AVG(balance) AS avg_balance FROM Account WHERE branch = 'akurdi';
+
+Find no. of depositors at each branch.
+
+SELECT a.branch, COUNT(*) AS num_depositors FROM depositor d JOIN Account a ON d.accno = a.accno GROUP BY a.branch;
+
+Find the branches where average account balance > 12000
+
+SELECT branch FROM (SELECT branch, AVG(balance) AS avg_balance FROM Account GROUP BY branch) AS avg_table WHERE avg_balance > 12000;
+
