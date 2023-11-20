@@ -1,0 +1,89 @@
+Q4. Create the tables with appropriate constraints and perform the queries. 
+Account(Acc_no, branch_name,balance) 
+branch(branch_name,branch_city,assets) 
+customer(cust_name,cust_street,cust_city) 
+Depositor(cust_name,acc_no) 
+Loan(loan_no,branch_name,amount)
+Borrower(cust_name,loan_no) Solve following query:
+i.	 Find the average account balance at each branch 
+ii.	 Find no. of depositors at each branch.
+iii.	 Find the branches where average account balance > 12000. 
+iv.	 Find number of tuples in customer relation. 
+v.	Calculate total loan amount given by bank. 
+vi.	Delete all loans with loan amount between 1300 and 1500. 
+vii.	Delete all tuples at every branch located in Nigdi.
+
+Coda :-
+
+create table Account(accno double primary key, branch varchar(20),balance double);
+
+create table branch(branchname varchar(20) primary key, city varchar(20));
+
+create table customer(cname varchar(20) primary key , street varchar(20), custcity varchar(20));
+
+create table depositor(cname VARCHAR(20),accno DOUBLE,FOREIGN KEY (cname) REFERENCES customer(cname));
+
+create table loan (loanno DOUBLE PRIMARY KEY,branchname VARCHAR(20),amount DOUBLE ,FOREIGN KEY (branchname) REFERENCES branch(branchname));
+
+create table borrower(cname varchar(30) , loanno double);
+
+insert into Account values(12345, 'akurdi', 30000),(12346, 'sarasbhag',40000),(12347,'khuthrud',12000);
+
+insert into branch values('akurdi','solapur'),('sarasbhag','pune'),('khuthrud','nagar');
+
+insert into customer values('shreyash','xyz','nagar'),('kunal','pqr','solapur'),('dama','abc','pune');
+
+
+insert into borrower values('shreyash',33),('kunal',28),('dama',62);
+
+select *from Account;
+
+select *from branch;
+
+select *from customer;
+
+select *from depositor;
+
+select *from loan;
+
+select *from borrower;
+
+
+Find the average account balance at each branch
+
+SELECT branch, AVG(balance) AS avg_balance FROM Account GROUP BY branch;
+
+Find no. of depositors at each branch.
+
+
+SELECT branch, COUNT(*) AS num_depositors FROM depositor GROUP BY branch;
+
+Find the branches where average account balance > 12000. 
+
+
+SELECT branch FROM (SELECT branch, AVG(balance) AS avg_balance FROM Account GROUP BY branch ) AS avg_table WHERE avg_balance > 12000;
+
+Find number of tuples in customer relation.
+
+SELECT COUNT(*) AS num_tuples FROM customer;
+
+Calculate total loan amount given by bank.
+
+SELECT SUM(amount) AS total_loan_amount FROM loan;
+
+Delete all loans with loan amount between 1300 and 1500. 
+
+DELETE FROM loan WHERE amount BETWEEN 1300 AND 1500;
+
+Delete all tuples at every branch located in Nigdi.
+
+DELETE FROM Account WHERE branch = 'nigdi';
+
+DELETE FROM branch WHERE branchname = 'nigdi';
+
+DELETE FROM customer WHERE custcity = 'nigdi';
+
+DELETE FROM depositor WHERE cname IN (SELECT cname FROM customer WHERE custcity = 'nigdi');
+
+DELETE FROM loan WHERE branchname = 'nigdi';
+
