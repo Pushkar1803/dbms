@@ -1,4 +1,18 @@
-Q2
+Q2. Create following tables and solve following Queries
+Account(Acc_no, branch_name,balance)
+branch(branch_name,branch_city,assets)
+customer(cust_name,cust_street,cust_city)
+Depositor(cust_name,acc_no)
+Loan(loan_no,branch_name,amount)
+Borrower(cust_name,loan_no)
+i. Create View on borrower table by selecting any two columns and perform insert update delete
+operations
+ii. Create view on borrower and depositor table by selecting any one column from each table
+perform insert update delete operations
+iii. List the customer who do not have bank branches in akurdi.
+iv. Display the customers those who have loan accounts.
+
+
 *  create table Account(accno double primary key, branch varchar(20),balance double);
 
    create table branch(branchname varchar(20) primary key, city varchar(20));
