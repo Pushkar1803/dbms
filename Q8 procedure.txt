@@ -5,6 +5,13 @@ number,sub4 number,sub5 number);
 2) create table stud_marks(rollno number(10),name varchar2(30),total_marks number(10));
 3) create table Result(rollno number(10), name varchar2(30), class varchar2(30));
 
+i. If marks scored by students in examination is <=1500 and marks>=990 then student will be placed in
+distinction category
+ii. If marks scored are between 989 and 900 then student will be placed in first class,
+iii. If marks are between 899 and 825 then student will be placed in Higher Second Class
+iv. If marks are between 824 and 600 then student will be placed in Pass Class
+
+code:
 
 CREATE TABLE marks (
     rollno INT(10),
