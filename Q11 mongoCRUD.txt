@@ -1,0 +1,45 @@
+Q11Design and Develop MongoDB Queries using CRUD operations. (Use CRUD operations, SAVE method,
+logical operators)
+Create following documents in MongoDB with attributes
+Student_Data (RollNo, Name, Class, dept, college_name, Marks_in_percentage, mobile, emaili_d ,
+sport_status(Y/N))
+i. Create/insert 10 docs
+ii. Update the mobile no of particular student
+iii. Update the class of TE students to BE
+iv. Delete the students whose percentage is less than 40
+v. Display department wise first three toppers.
+vi. Display the student’s name those are in First class and participated in sports activity.
+vii. Display the student’s name those are in First class OR participated in sports activity.
+
+
+Qi. Create/insert 10 docs. 
+
+db.Student_Data.insertMany([ { "RollNo": 1, "Name": "John Doe", "Class": "12th", "dept": "Science", "college_name": "XYZ College", "Marks_in_percentage": 85, "mobile": "1234567890", "email_id": "john.doe@example.com", "sport_status": "Y" }, ]); 
+
+Qii. Update the mobile no of particular student.
+
+    db.Student_Data.updateOne( { "RollNo": 1 }, { $set: { "mobile": "9876543210" } } ); 
+
+Qiii. Update the class of TE students to BE.
+
+    db.Student_Data.updateMany( { "Class": "TE" }, { $set: { "Class": "BE" } } )
+
+
+Qiv. Delete the students whose percentage is less than 40.
+
+    db.Student_Data.deleteMany( { "Marks_in_percentage": { $lt: 40 } } ); 
+
+QV. Display department wise first three toppers. 
+
+    db.Student_Data.aggregate([ { $sort: { "Marks_in_percentage": -1 } }, 
+{ $group: {  _id: "$dept", toppers: { $push: "$$ROOT" } } }, { $project: { _id: 0, Department: "$_id", TopThree: { $slice: ["$toppers", 3] } } } ]); 
+
+QVi. Display the student’s name those are in First class and participated in sports activity.
+
+    db.Student_Data.find( { "Class": "1st", "sport_status": "Y" }, { "_id": 0, "Name": 1 } ); 
+
+QVii. Display the student’s name those are in First class OR participated in sports activity.
+
+    db.Student_Data.find( { $or: [{ "Class": "1st" }, { "sport_status": "Y" }] },  { "_id": 0, "Name": 1 } ); 
+
+
