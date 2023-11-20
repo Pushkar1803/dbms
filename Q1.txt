@@ -1,4 +1,15 @@
-Q1
+Q1. Create following Tables and ExecuteQueries
+Customer(cust_no,fname,lname)
+Cust_Acc_FD_Details(custno,acc_fd_no)
+fd_details(acc_fd_no,amt)
+address_details(code_no,add1,add2,state,city,pincode)
+Employee(emp_no,f_name,l_name,m_name,dept,code_no)
+Contact_details(code_no,cntc_type,cntc_data)
+i. Retrieve the address of customer Fname as 'xyz' and Lname as 'pqr'
+ii. List the customer holding fixed deposit of amount more than 5000
+iii. List the employee details along with contact details using left outer join & right join.
+
+
  *  CREATE TABLE Customer(cust_no INT PRIMARY KEY, fname VARCHAR(50), lname VARCHAR(50));
 
  CREATE TABLE Cust_Acc_FD_Details (custno INT, acc_fd_no INT PRIMARY KEY, FOREIGN KEY (custno) REFERENCES Customer(cust_no));
