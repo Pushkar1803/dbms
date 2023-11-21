@@ -1,0 +1,21 @@
+Create following documents in MongoDB with attributes Student_Data (RollNo, Name, Class, dept, college_name, Marks_in_percentage, mobile, emaili_d ) 
+ 
+db.createCollection("student")
+1. Create Documents: 
+db.student.insertMany([{"RollNo":1,"Name":"shreyash","Class":"12th","dept":"computer","college_name": "XYZ College","Marks_in_percentage": 85, "mobile": "1234567890", "email_id":"john.doe@example.com"},{"RollNo":2,"Name":"kunal","salary":25000,"dept":"computer","college_name": "ABC College", "Marks_in_percentage": 78, "mobile":"9876543210","email_id":"jane.smith@example.com"},{"RollNo":3,"Name":"dama","salary":30000,"dept":"elecrtical","college_name": "XYZ College", "Marks_in_percentage": 92, "mobile": "5551234567","email_id": "bob.johnson@example.com"}])
+Implement aggregation operations use $group 
+ 
+i.	Department wise Max Marks student 
+ 
+db.student.aggregate([{$group: {_id: "$dept",maxMarks: { $max: "$Marks_in_percentage" },student: { $first: "$$ROOT" }}},{$project: {_id: 0,dept: "$_id",maxMarks: 1,student: 1}}]); 
+ii.	Department wise Min Marks student 
+
+db.student.aggregate([{ $group: {_id: "$dept",minMarks: { $min: "$Marks_in_percentage" },student: { $first: "$$ROOT" }}}, { $project: {_id: 0,dept: "$_id",minMarks: 1,student: 1}}]);
+ 
+
+iii.	Department wise Sum of Marks 
+ 
+db.student.aggregate([{$group: {_id: "$dept",sumMarks: { $sum: "$Marks_in_percentage" }}},{$project: {_id: 0,dept: "$_id",sumMarks: 1}}]);
+
+	iv. 	Department wise AVG Marks of student 
+db.student.aggregate([{$group: {_id: "$dept",avgMarks: { $avg: "$Marks_in_percentage" }}},{$project: {_id: 0,dept: "$_id",avgMarks: 1}}]);
